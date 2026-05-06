@@ -1,0 +1,200 @@
+<html>
+    <head>
+        <style>
+            main {
+                display: flex;
+            }
+
+            div  {
+                margin: 10px;
+            }
+
+            .opcoes button {
+                margin: 10px;
+                width: 100%;
+            }
+        </style>
+        <script>
+            let dados=[];
+            let index = 0;
+
+            function init() {
+                document.getElementById("numero").readOnly = true;
+                document.getElementById("nome").readOnly = true;
+                document.getElementById("curso").readOnly = true;
+                document.getElementById("first").disabled  = true;
+                document.getElementById("previous").disabled  = true;
+                document.getElementById("next").disabled  = true;
+                document.getElementById("last").disabled  = true;
+                document.getElementById("editar").disabled  = true;
+                document.getElementById("remover").disabled  = true;
+                document.getElementById("ok").hidden  = true;
+                document.getElementById("cancel").hidden  = true;
+            }
+
+            function novo() {
+                inserir = true;
+                document.getElementById("numero").readOnly = false;
+                document.getElementById("nome").readOnly = false;
+                document.getElementById("curso").readOnly = false;
+                document.getElementById("numero").value = "";
+                document.getElementById("nome").value = "";
+                document.getElementById("curso").value = "";
+                document.getElementById("first").hidden  = true;
+                document.getElementById("previous").hidden  = true;
+                document.getElementById("next").hidden  = true;
+                document.getElementById("last").hidden  = true;
+                document.getElementById("novo").hidden  = true;
+                document.getElementById("editar").hidden  = true;
+                document.getElementById("remover").hidden  = true;
+                document.getElementById("ok").hidden  = false;
+                document.getElementById("cancel").hidden  = false;
+            }
+
+            function editar() {
+                inserir = false;
+                document.getElementById("numero").readOnly = false;
+                document.getElementById("nome").readOnly = false;
+                document.getElementById("curso").readOnly = false;
+                document.getElementById("first").hidden  = true;
+                document.getElementById("previous").hidden  = true;
+                document.getElementById("next").hidden  = true;
+                document.getElementById("last").hidden  = true;
+                document.getElementById("novo").hidden  = true;
+                document.getElementById("editar").hidden  = true;
+                document.getElementById("remover").hidden  = true;
+                document.getElementById("ok").hidden  = false;
+                document.getElementById("cancel").hidden  = false;
+            }
+
+            function gravar() {
+                if (inserir) {
+                    let novo={};
+                    novo.nome = document.getElementById("nome").value;
+                    novo.numero = document.getElementById("numero").value;
+                    novo.curso = document.getElementById("curso").value;
+                    dados.push(novo);
+                    index = dados.length-1;
+                } else {
+                    dados[index].nome = document.getElementById("nome").value;
+                    dados[index].numero = document.getElementById("numero").value;
+                    dados[index].curso = document.getElementById("curso").value;
+                }
+                document.getElementById("numero").readOnly = true;
+                document.getElementById("nome").readOnly = true;
+                document.getElementById("curso").readOnly = true;
+                document.getElementById("novo").hidden  = false;
+                document.getElementById("editar").hidden  = false;
+                document.getElementById("remover").hidden  = false;
+                document.getElementById("ok").hidden  = true;
+                document.getElementById("cancel").hidden  = true;
+                 document.getElementById("first").hidden  = false;
+                document.getElementById("previous").hidden  = false;
+                document.getElementById("next").hidden  = false;
+                document.getElementById("last").hidden  = false;
+                mostrar();
+            }
+
+            function mostrar() {
+                document.getElementById("numero").value = dados[index].numero;
+                document.getElementById("nome").value = dados[index].nome;
+                document.getElementById("curso").value = dados[index].curso;
+                document.getElementById("first").disabled  = false;
+                document.getElementById("previous").disabled  = false;
+                document.getElementById("next").disabled  = false;
+                document.getElementById("last").disabled  = false;
+                document.getElementById("editar").disabled  = false;
+                document.getElementById("remover").disabled  = false;
+                if (index == 0) {
+                    document.getElementById("first").disabled  = true;
+                    document.getElementById("previous").disabled  = true;
+                } 
+                if (index == dados.length-1) {
+                    document.getElementById("next").disabled  = true;
+                    document.getElementById("last").disabled  = true;
+                }
+            }
+
+            function cancel() {
+                document.getElementById("numero").value = "";
+                document.getElementById("nome").value = "";
+                document.getElementById("curso").value = "";
+                document.getElementById("numero").readOnly = true;
+                document.getElementById("nome").readOnly = true;
+                document.getElementById("curso").readOnly = true;
+                document.getElementById("novo").hidden  = false;
+                document.getElementById("editar").hidden  = false;
+                document.getElementById("remover").hidden  = false;
+                document.getElementById("ok").hidden  = true;
+                document.getElementById("cancel").hidden  = true;
+                document.getElementById("first").hidden  = false;
+                document.getElementById("previous").hidden  = false;
+                document.getElementById("next").hidden  = false;
+                document.getElementById("last").hidden  = false;
+                mostrar();
+            }
+
+            function remover() {
+                if (confirm("Deseja remover este elemento?")) {
+                    dados.splice(index, 1);
+                    if (dados.length == 0) {
+                        document.getElementById("numero").value = "";
+                        document.getElementById("nome").value = "";
+                        document.getElementById("curso").value = "";
+                        document.getElementById("editar").disabled = true;
+                        document.getElementById("remover").disabled = true;
+                    } else {
+                        index =0;
+                        mostrar();
+                    }
+                } 
+               
+            }
+
+            function first() {
+                index = 0;
+                mostrar();
+            }
+
+            function previous() {
+                index--;
+                mostrar();
+            }
+
+            function next() {
+                index++;
+                mostrar();
+            }
+
+            function last() {
+                index = dados.length-1;
+                mostrar();
+            }
+
+        </script>
+    </head>
+    <body onload="init()">
+        <main>
+            <div>
+                <label for="numero">Numero:</label><br>
+                <input id="numero" type="number"><br>
+                <label for="nome">Nome:</label><br>
+                <input id="nome" type="text"><br>
+                <label for="curso">Curso:</label><br>
+                <input id="curso" type="text"><br>
+                <br>
+                <button id="first" onclick="first()"><<</button>
+                <button id="previous" onclick="previous()"><</button>
+                <button id="next" onclick="next()">></button>
+                <button id="last" onclick="last()">>></button>
+            </div>
+            <div class="opcoes">
+                <button id="novo" onclick="novo()">Novo</button><br>
+                <button id="editar" onclick="editar()">Editar</button><br>
+                <button id="remover" onclick="remover()">Remover</button><br>
+                <button id="ok" onclick="gravar()">Ok</button><br>
+                <button id="cancel" onclick="cancel()">Cancel</button><br>
+            </div>
+        </main>
+    </body>
+</html>
